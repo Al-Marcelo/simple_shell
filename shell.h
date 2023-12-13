@@ -8,6 +8,7 @@
  */
 
 #include <stdio.h>
+#include <sys/wait.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -20,7 +21,7 @@
  */
 
 void blink_prompt(void);
-void marc_print(const char string);
+void marc_print(const char *string);
 void read_command(char *command, size_t size);
 void execute_command(const char *command);
 

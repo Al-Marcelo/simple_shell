@@ -43,6 +43,7 @@ void blink_prompt(void);
 void marc_print(const char *string);
 void read_command(char *command, size_t size);
 void execute_command(const char *command);
+int add(int num1, int num2);
 
 /**
  * struct liststr - singly linked list

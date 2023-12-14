@@ -1,10 +1,10 @@
 #include "shell.h"
 
 /**
- * add - add two variables
- * @num1: the number to be added
- * @num2: the second number to be added
- * Return: the added value
+ * add - Adds two variables
+ * @num1: The number to be added
+ * @num2: The second number to be added
+ * Return: The added value
  */
 
 int add(int num1, int num2)

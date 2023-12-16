@@ -180,7 +180,6 @@ void remove_comments(char *);
 int _myexit(info_t *);
 int _mycd(info_t *);
 int _myhelp(info_t *);
-int get_exit_code(char *arg)
 
 /* toem_builtin1.c */
 int _myhistory(info_t *);

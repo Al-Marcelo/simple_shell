@@ -1,5 +1,5 @@
-#ifndef _SHELL_H_
-#define _SHELL_H_
+#ifndef SHELL_H
+#define SHELL_H
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -180,6 +180,7 @@ void remove_comments(char *);
 int _myexit(info_t *);
 int _mycd(info_t *);
 int _myhelp(info_t *);
+int get_exit_code(char *arg)
 
 /* toem_builtin1.c */
 int _myhistory(info_t *);
@@ -234,7 +235,5 @@ void check_chain(info_t *, char *, size_t *, size_t, size_t);
 int replace_alias(info_t *);
 int replace_vars(info_t *);
 int replace_string(char **, char *);
-
-
 
 #endif

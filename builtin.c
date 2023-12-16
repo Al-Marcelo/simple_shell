@@ -7,26 +7,28 @@
  *  Return: exits with a given exit status
  *         (0) if info.argv[0] != "exit"
  */
+int get_exit_code(char *arg)
+{
+	int exitcode;
+	if (!arg || strtol(arg, NULL, 10, &exitcode) == 0)
+	{
+		return -1; // Invalid argument
+	}
+	return exitcode;
+}
 int _myexit(info_t *info)
 {
-	int exitcheck;
-
-	if (info->argv[1])  /* If there is an exit arguement */
+	if (info->argv[1])
 	{
-		exitcheck = _erratoi(info->argv[1]);
-		if (exitcheck == -1)
+		int exitcode = get_exit_code(info->argv[1]);
+		if (exitcode == -1)
 		{
-			info->status = 2;
-			print_error(info, "Illegal number: ");
-			_eputs(info->argv[1]);
-			_eputchar('\n');
-			return (1);
+			print_error(info, "Illegal number: %s\n", info->argv[1]);
+			return 1;
 		}
-		info->err_num = _erratoi(info->argv[1]);
-		return (-2);
+		return -2; // Signal exit with specified code
 	}
-	info->err_num = -1;
-	return (-2);
+	return -1; // Exit shell with default code
 }
 
 /**
@@ -37,45 +39,28 @@ int _myexit(info_t *info)
  */
 int _mycd(info_t *info)
 {
-	char *s, *dir, buffer[1024];
-	int chdir_ret;
-
-	s = getcwd(buffer, 1024);
-	if (!s)
-		_puts("TODO: >>getcwd failure emsg here<<\n");
+	char *target;
 	if (!info->argv[1])
 	{
-		dir = _getenv(info, "HOME=");
-		if (!dir)
-			chdir_ret = /* TODO: what should this be? */
-				chdir((dir = _getenv(info, "PWD=")) ? dir : "/");
-		else
-			chdir_ret = chdir(dir);
+		target = getenv("HOME");
+		if (!target) target = "/";
 	}
 	else if (_strcmp(info->argv[1], "-") == 0)
 	{
-		if (!_getenv(info, "OLDPWD="))
-		{
-			_puts(s);
-			_putchar('\n');
-			return (1);
-		}
-		_puts(_getenv(info, "OLDPWD=")), _putchar('\n');
-		chdir_ret = /* TODO: what should this be? */
-			chdir((dir = _getenv(info, "OLDPWD=")) ? dir : "/");
-	}
-	else
-		chdir_ret = chdir(info->argv[1]);
-	if (chdir_ret == -1)
-	{
-		print_error(info, "can't cd to ");
-		_eputs(info->argv[1]), _eputchar('\n');
+		target = getenv("OLDPWD");
+		if (!target) return print_error(info, "No previous directory\n");
 	}
 	else
 	{
-		_setenv(info, "OLDPWD", _getenv(info, "PWD="));
-		_setenv(info, "PWD", getcwd(buffer, 1024));
+		target = info->argv[1];
 	}
+	if (chdir(target) == -1)
+	{
+		print_error(info, "Error changing directory to '%s'\n", target);
+		return 1;
+	}
+	_setenv("OLDPWD", getcwd(NULL, 0));
+	_setenv("PWD", getcwd(NULL, 0));
 	return (0);
 }
 
